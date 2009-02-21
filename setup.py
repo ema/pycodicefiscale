@@ -40,5 +40,6 @@ setup(
        zip_safe = True,
        license='LGPL',
        description='codicefiscale library',
-       long_description = longdesc
+       long_description = longdesc,
+       test_suite = "tests"
 )
