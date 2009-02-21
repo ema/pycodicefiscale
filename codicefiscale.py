@@ -5,7 +5,7 @@ codicefiscale is a Python library useful for handling Italian fiscal code card,
 officially known as Italy's Codice Fiscale.
 
 Copyright (C) 2009 Emanuele Rocca
-Homepage: http://code.google.com/p/codicefiscale
+Homepage: http://code.google.com/p/pycodicefiscale
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
