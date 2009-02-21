@@ -1,7 +1,7 @@
 """
-codicefiscale - Italian fiscal code library
+codicefiscale - Python library for Italian fiscal code (codicefiscale)
 
-codicefiscale is a Python library useful for handling Italian fiscal code card,
+codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
 
 Copyright (C) 2009 Emanuele Rocca
@@ -22,7 +22,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-__version__ = '0.1'
+__version__ = '0.2'
 __author__ = "Emanuele Rocca"
 
 import re
@@ -45,10 +45,10 @@ def isvalid(code):
     return type(code) is str and re.match(PATTERN, code) is not None
 
 # Fiscal code calculation 
-def __common_triplet(input, consonants, vowels):
+def __common_triplet(input_string, consonants, vowels):
     output = consonants
 
-    if len(input) > 2:
+    if len(input_string) > 2:
         # likely
         stopat = 3
     else:
@@ -63,39 +63,39 @@ def __common_triplet(input, consonants, vowels):
 
     return output[:3]
 
-def __consonants_and_vowels(input):
-    input = input.upper().replace(' ', '')
+def __consonants_and_vowels(input_string):
+    input_string = input_string.upper().replace(' ', '')
 
-    consonants = filter(lambda x: x in __CONSONANTS, input)
-    vowels = list(filter(lambda x: x in __VOWELS, input))
+    consonants = filter(lambda x: x in __CONSONANTS, input_string)
+    vowels = list(filter(lambda x: x in __VOWELS, input_string))
 
     return consonants, vowels
 
-def __surname_triplet(input):
-    consonants, vowels = __consonants_and_vowels(input)
+def __surname_triplet(input_string):
+    consonants, vowels = __consonants_and_vowels(input_string)
 
-    return __common_triplet(input, consonants, vowels)
+    return __common_triplet(input_string, consonants, vowels)
 
-def __name_triplet(input):
-    if input == '':
+def __name_triplet(input_string):
+    if input_string == '':
         # highly unlikely: no first name, like Indian people whose passport
         # reports just one word 
         return 'XXX'
 
-    consonants, vowels = __consonants_and_vowels(input)
+    consonants, vowels = __consonants_and_vowels(input_string)
     
     if len(consonants) > 3:
         return "%s%s%s" % (consonants[0], consonants[2], consonants[3])
 
-    return __common_triplet(input, consonants, vowels)
+    return __common_triplet(input_string, consonants, vowels)
 
-def control_code(input):
-    """``control_code(input) -> int``
-    Computes the control code for the given input string. The expected input is
+def control_code(input_string):
+    """``control_code(input_string) -> int``
+    Computes the control code for the given input_string string. The expected input_string is
     the first 15 characters of a fiscal code.
 
     eg: control_code('RCCMNL83S18D969') -> 'H'"""
-    assert len(input) == 15
+    assert len(input_string) == 15
 
     # building conversion tables for even and odd characters positions
     even_controlcode = {}
@@ -119,7 +119,7 @@ def control_code(input):
 
     # computing the code
     code = 0
-    for idx, char in enumerate(input):
+    for idx, char in enumerate(input_string):
         if idx % 2 == 0:
             code += odd_controlcode[char]
         else:
@@ -157,8 +157,8 @@ def build(surname, name, birthday, sex, municipality):
     return output
 
 # info from fiscal code 
-def birthday(code):
-    """``birthday(code) -> string``
+def get_birthday(code):
+    """``get_birthday(code) -> string``
     The birthday of the person whose fiscal code is 'code', in the format
     DD-MM-YY. 
 
@@ -177,8 +177,8 @@ def birthday(code):
 
     return "%s-%s-%s" % (day, month, year)
 
-def sex(code):
-    """``sex(code) -> string``
+def get_sex(code):
+    """``get_sex(code) -> string``
     The sex of the person whose fiscal code is 'code'.
 
     eg: sex('RCCMNL83S18D969H') -> 'M'
@@ -187,13 +187,3 @@ def sex(code):
     assert isvalid(code)
 
     return int(code[9:11]) < 32 and 'M' or 'F'
-
-if __name__ == "__main__":
-    import datetime
-    surname = "Rocca"
-    name = "Emanuele"
-    birthday = datetime.datetime(1983, 11, 18)
-    sex = 'M'
-    municipality = 'D969'
-
-    print build(surname, name, birthday, sex, municipality)

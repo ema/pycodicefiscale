@@ -2,7 +2,7 @@
 import unittest
 
 import datetime
-from codicefiscale import isvalid, birthday, sex, control_code, build
+from codicefiscale import isvalid, get_birthday, get_sex, control_code, build
 
 class TestRepos(unittest.TestCase):
     
@@ -14,7 +14,7 @@ class TestRepos(unittest.TestCase):
         for cf in invalid:
             self.assertFalse(isvalid(invalid))
 
-    def test_birthday(self):
+    def test_get_birthday(self):
         inputs = { 
             'MRTNTN23M02D969P': '2-8-23',
             'RCCMNL83S18D969H': '18-11-83',
@@ -23,9 +23,9 @@ class TestRepos(unittest.TestCase):
         }
                      
         for cf, expected in inputs.items():
-            self.assertEquals(expected, birthday(cf))
+            self.assertEquals(expected, get_birthday(cf))
 
-    def test_sex(self):
+    def test_get_sex(self):
         inputs = { 
             'MRTNTN23M02D969P': 'M',
             'RCCMNL83S18D969H': 'M',
@@ -35,7 +35,7 @@ class TestRepos(unittest.TestCase):
         }
                      
         for cf, expected in inputs.items():
-            self.assertEquals(expected, sex(cf))
+            self.assertEquals(expected, get_sex(cf))
 
     def test_control_code(self):
         inputs = { 

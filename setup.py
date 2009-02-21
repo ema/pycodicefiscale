@@ -27,7 +27,7 @@ for what in dir(codicefiscale):
     if not what.startswith("__"):
         obj = getattr(codicefiscale, what)
         if callable(obj) and obj.__doc__:
-            longdesc += obj.__doc__ + "\n\n"
+            longdesc += obj.__doc__ + "\n\n\n"
 
 setup(
        name = 'codicefiscale',
@@ -39,7 +39,7 @@ setup(
        py_modules = ['codicefiscale'],
        zip_safe = True,
        license='LGPL',
-       description='codicefiscale library',
+       description="Python library for Italian fiscal code (codicefiscale)",
        long_description = longdesc,
        test_suite = "tests"
 )
