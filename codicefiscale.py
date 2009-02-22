@@ -1,5 +1,5 @@
 """
-codicefiscale - Python library for Italian fiscal code (codicefiscale)
+Python library for Italian fiscal code
 
 codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
@@ -56,7 +56,7 @@ def __common_triplet(input_string, consonants, vowels):
         stopat = 2 
 
     while len(output) < stopat:
-        output += vowels.pop()
+        output += vowels.pop(0)
     
     if len(output) == 2:
         output += 'X'
