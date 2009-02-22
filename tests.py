@@ -12,14 +12,24 @@ class TestRepos(unittest.TestCase):
                     "CSTNGL22I10D086I" ]
 
         for cf in invalid:
-            self.assertFalse(isvalid(invalid))
+            self.assertFalse(isvalid(cf))
+        
+        valid = ( 'MRTNTN23M02D969P', 
+                  'RCCMNL83S18D969H', 
+                  'MRSMSR81D60Z611H',
+                  'CNTCHR83T41D969D', 
+                  'FOXDRA26C24H872Y' )
+
+        for cf in valid:
+            self.assertTrue(isvalid(cf))
 
     def test_get_birthday(self):
         inputs = { 
             'MRTNTN23M02D969P': '2-8-23',
             'RCCMNL83S18D969H': '18-11-83',
             'MRSMSR81D60Z611H': '20-4-81',
-            'CNTCHR83T41D969D': '1-12-83'
+            'CNTCHR83T41D969D': '1-12-83',
+            'FOXDRA26C24H872Y': '24-3-26'
         }
                      
         for cf, expected in inputs.items():
@@ -32,6 +42,7 @@ class TestRepos(unittest.TestCase):
             'RCDLSN84S16D969Z': 'M',
             'MRSMSR81D60Z611H': 'F',
             'CNTCHR83T41D969D': 'F',
+            'FOXDRA26C24H872Y': 'M'
         }
                      
         for cf, expected in inputs.items():
@@ -45,6 +56,7 @@ class TestRepos(unittest.TestCase):
             'CNTCHR83T41D969': 'D',
             'BNCSFN85T58G702': 'W',
             'RCCMNL83S18D969': 'H',
+            'FOXDRA26C24H872': 'Y'
         }
 
         for cf, expected in inputs.items():
@@ -75,6 +87,14 @@ class TestRepos(unittest.TestCase):
                 "Arcidiacono", "Alessandro", 
                 datetime.datetime(1984, 11, 16),
                 'M','D969'
+            ),
+
+            'FOXDRA26C24H872Y': ( 
+                "Fo", "Dario", 
+                datetime.datetime(1926, 3, 24),
+                'M',
+                # born in Sangiano
+                'H872'
             )
         }
         
