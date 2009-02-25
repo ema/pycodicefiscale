@@ -38,6 +38,7 @@ PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]{3}[A-Z]$"
 
 def isvalid(code):
     """``isvalid(code) -> bool``
+
     This function checks if the given fiscal code is syntactically valid.
 
     eg: isvalid('RCCMNL83S18D969H') -> True
@@ -91,8 +92,9 @@ def __name_triplet(input_string):
 
 def control_code(input_string):
     """``control_code(input_string) -> int``
-    Computes the control code for the given input_string string. The expected input_string is
-    the first 15 characters of a fiscal code.
+
+    Computes the control code for the given input_string string. The expected
+    input_string is the first 15 characters of a fiscal code.
 
     eg: control_code('RCCMNL83S18D969') -> 'H'"""
     assert len(input_string) == 15
@@ -129,6 +131,7 @@ def control_code(input_string):
 
 def build(surname, name, birthday, sex, municipality):
     """``build(surname, name, birthday, sex, municipality) -> string``
+
     Computes the fiscal code for the given person data.
 
     eg: build('Rocca', 'Emanuele', datetime.datetime(1983, 11, 18), 'M', 'D969') 
@@ -159,6 +162,7 @@ def build(surname, name, birthday, sex, municipality):
 # info from fiscal code 
 def get_birthday(code):
     """``get_birthday(code) -> string``
+
     The birthday of the person whose fiscal code is 'code', in the format
     DD-MM-YY. 
 
@@ -179,6 +183,7 @@ def get_birthday(code):
 
 def get_sex(code):
     """``get_sex(code) -> string``
+
     The sex of the person whose fiscal code is 'code'.
 
     eg: sex('RCCMNL83S18D969H') -> 'M'
