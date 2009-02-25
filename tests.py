@@ -53,6 +53,7 @@ class TestRepos(unittest.TestCase):
 
     def test_control_code(self):
         inputs = { 
+            # fiscal codes tested in this module
             'MRTNTN23M02D969': 'P',
             'MRSMSR81D60Z611': 'H',
             'RCDLSN84S16D969': 'Z',
@@ -60,7 +61,7 @@ class TestRepos(unittest.TestCase):
             'BNCSFN85T58G702': 'W',
             'RCCMNL83S18D969': 'H',
             'FOXDRA26C24H872': 'Y',
-            'MAILCU91C25F839': 'H'
+            'MAILCU91A25F839': 'D'
         }
 
         for cf, expected in inputs.items():
