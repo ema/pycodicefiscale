@@ -18,7 +18,8 @@ class TestRepos(unittest.TestCase):
                   'RCCMNL83S18D969H', 
                   'MRSMSR81D60Z611H',
                   'CNTCHR83T41D969D', 
-                  'FOXDRA26C24H872Y' )
+                  'FOXDRA26C24H872Y',
+                  'MAILCU91A25F839D' )
 
         for cf in valid:
             self.assertTrue(isvalid(cf))
@@ -29,7 +30,8 @@ class TestRepos(unittest.TestCase):
             'RCCMNL83S18D969H': '18-11-83',
             'MRSMSR81D60Z611H': '20-4-81',
             'CNTCHR83T41D969D': '1-12-83',
-            'FOXDRA26C24H872Y': '24-3-26'
+            'FOXDRA26C24H872Y': '24-3-26',
+            'MAILCU91A25F839D': '25-1-91'
         }
                      
         for cf, expected in inputs.items():
@@ -42,7 +44,8 @@ class TestRepos(unittest.TestCase):
             'RCDLSN84S16D969Z': 'M',
             'MRSMSR81D60Z611H': 'F',
             'CNTCHR83T41D969D': 'F',
-            'FOXDRA26C24H872Y': 'M'
+            'FOXDRA26C24H872Y': 'M',
+            'MAILCU91A25F839D': 'M'
         }
                      
         for cf, expected in inputs.items():
@@ -56,7 +59,8 @@ class TestRepos(unittest.TestCase):
             'CNTCHR83T41D969': 'D',
             'BNCSFN85T58G702': 'W',
             'RCCMNL83S18D969': 'H',
-            'FOXDRA26C24H872': 'Y'
+            'FOXDRA26C24H872': 'Y',
+            'MAILCU91C25F839': 'H'
         }
 
         for cf, expected in inputs.items():
@@ -95,6 +99,13 @@ class TestRepos(unittest.TestCase):
                 'M',
                 # born in Sangiano
                 'H872'
+            ),
+
+            'MAILCU91A25F839D': (
+                "Maio", "Luca",
+                datetime.datetime(1991, 1, 25),
+                'M',
+                'F839'
             )
         }
         
