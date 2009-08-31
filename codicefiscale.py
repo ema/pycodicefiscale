@@ -30,7 +30,7 @@ import sets
 import string
 
 __VOWELS = [ 'A', 'E', 'I', 'O', 'U' ]
-__CONSONANTS = list(sets.Set(list(string.uppercase)).difference(__VOWELS))
+__CONSONANTS = list(sets.Set(list(string.ascii_uppercase)).difference(__VOWELS))
 
 MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
 
@@ -105,7 +105,7 @@ def control_code(input_string):
     for idx, char in enumerate(string.digits):
         even_controlcode[char] = idx
 
-    for idx, char in enumerate(string.uppercase):
+    for idx, char in enumerate(string.ascii_uppercase):
         even_controlcode[char] = idx
 
     values = [ 1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8,
@@ -116,7 +116,7 @@ def control_code(input_string):
     for idx, char in enumerate(string.digits):
         odd_controlcode[char] = values[idx]
 
-    for idx, char in enumerate(string.uppercase):
+    for idx, char in enumerate(string.ascii_uppercase):
         odd_controlcode[char] = values[idx]
 
     # computing the code
@@ -127,7 +127,7 @@ def control_code(input_string):
         else:
             code += even_controlcode[char]
     
-    return string.uppercase[code % 26]
+    return string.ascii_uppercase[code % 26]
 
 def build(surname, name, birthday, sex, municipality):
     """``build(surname, name, birthday, sex, municipality) -> string``

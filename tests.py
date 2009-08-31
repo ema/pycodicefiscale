@@ -2,6 +2,8 @@
 import unittest
 
 import datetime
+import locale
+
 from codicefiscale import isvalid, get_birthday, get_sex, control_code, build
 
 class TestRepos(unittest.TestCase):
@@ -116,6 +118,15 @@ class TestRepos(unittest.TestCase):
                        municipality=data[4])
         
             self.assertEquals(expected, cf)
+
+class TestBugs(unittest.TestCase):
+
+    def test_01_locale_bug(self):
+        locale.setlocale(locale.LC_ALL, "it_IT")
+
+        expected = "MRARSS91A25G693C"
+        actual = build("mario", "rossi", datetime.datetime(1991, 1, 25), "M", "G693")
+        self.assertEquals(expected, actual)
 
 if __name__ == "__main__":
     unittest.main()
