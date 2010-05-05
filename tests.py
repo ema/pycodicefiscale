@@ -20,6 +20,7 @@ class TestRepos(unittest.TestCase):
                   'RCCMNL83S18D969H', 
                   'MRSMSR81D60Z611H',
                   'CNTCHR83T41D969D', 
+                  'XXXXXX77A01Z2P6B',
                   'FOXDRA26C24H872Y',
                   'MAILCU91A25F839D' )
 

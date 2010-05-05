@@ -4,7 +4,7 @@ Python library for Italian fiscal code
 codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
 
-Copyright (C) 2009 Emanuele Rocca
+Copyright (C) 2009 2010 Emanuele Rocca
 Homepage: http://code.google.com/p/pycodicefiscale
 
 This library is free software; you can redistribute it and/or
@@ -22,19 +22,18 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-__version__ = '0.4'
+__version__ = '0.5'
 __author__ = "Emanuele Rocca"
 
 import re
-import sets
 import string
 
 __VOWELS = [ 'A', 'E', 'I', 'O', 'U' ]
-__CONSONANTS = list(sets.Set(list(string.ascii_uppercase)).difference(__VOWELS))
+__CONSONANTS = list(set(list(string.ascii_uppercase)).difference(__VOWELS))
 
 MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
 
-PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]{3}[A-Z]$"
+PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
 
 def isvalid(code):
     """``isvalid(code) -> bool``
