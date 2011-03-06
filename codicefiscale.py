@@ -4,7 +4,7 @@ Python library for Italian fiscal code
 codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
 
-Copyright (C) 2009 2010 Emanuele Rocca
+Copyright (C) 2009 2010 2011 Emanuele Rocca
 Homepage: http://code.google.com/p/pycodicefiscale
 
 This library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-__version__ = '0.5'
+__version__ = '0.6'
 __author__ = "Emanuele Rocca"
 
 import re
@@ -176,9 +176,9 @@ def get_birthday(code):
     day = day < 32 and day or day - 40
 
     month = MONTHSCODE.index(code[8]) + 1
-    year = code[6:8]
+    year = int(code[6:8])
 
-    return "%s-%s-%s" % (day, month, year)
+    return "%02d-%02d-%02d" % (day, month, year)
 
 def get_sex(code):
     """``get_sex(code) -> string``

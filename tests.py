@@ -29,12 +29,12 @@ class TestRepos(unittest.TestCase):
 
     def test_get_birthday(self):
         inputs = { 
-            'MRTNTN23M02D969P': '2-8-23',
+            'MRTNTN23M02D969P': '02-08-23',
             'RCCMNL83S18D969H': '18-11-83',
-            'MRSMSR81D60Z611H': '20-4-81',
-            'CNTCHR83T41D969D': '1-12-83',
-            'FOXDRA26C24H872Y': '24-3-26',
-            'MAILCU91A25F839D': '25-1-91'
+            'MRSMSR81D60Z611H': '20-04-81',
+            'CNTCHR83T41D969D': '01-12-83',
+            'FOXDRA26C24H872Y': '24-03-26',
+            'MAILCU91A25F839D': '25-01-91'
         }
                      
         for cf, expected in inputs.items():
@@ -128,6 +128,12 @@ class TestBugs(unittest.TestCase):
         expected = "MRARSS91A25G693C"
         actual = build("mario", "rossi", datetime.datetime(1991, 1, 25), "M", "G693")
         self.assertEquals(expected, actual)
+
+    def test_02_foreign_people_bug(self):
+        self.assertTrue(isvalid("XXXXXX77A01Z2P6B"))
+
+    def test_03_get_birthday_format(self):
+        self.assertEquals('02-08-23', get_birthday('MRTNTN23M02D969P'))
 
 if __name__ == "__main__":
     unittest.main()
