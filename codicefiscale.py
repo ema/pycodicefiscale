@@ -4,8 +4,8 @@ Python library for Italian fiscal code
 codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
 
-Copyright (C) 2009 2010 2011 Emanuele Rocca
-Homepage: http://code.google.com/p/pycodicefiscale
+Copyright (C) 2009-2012 Emanuele Rocca
+Homepage: https://github.com/ema/pycodicefiscale
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-__version__ = '0.6'
+__version__ = '0.7'
 __author__ = "Emanuele Rocca"
 
 import re
@@ -46,6 +46,7 @@ def isvalid(code):
 
 # Fiscal code calculation 
 def __common_triplet(input_string, consonants, vowels):
+    """__common_triplet(input_string, consonants, vowels) -> string"""
     output = consonants
 
     if len(input_string) > 2:
@@ -64,22 +65,28 @@ def __common_triplet(input_string, consonants, vowels):
     return output[:3]
 
 def __consonants_and_vowels(input_string):
+    """__consonants_and_vowels(input_string) -> (string, list)
+
+    Get the consonants as a string and the vowels as a list.
+    """
     input_string = input_string.upper().replace(' ', '')
 
-    consonants = filter(lambda x: x in __CONSONANTS, input_string)
-    vowels = list(filter(lambda x: x in __VOWELS, input_string))
+    consonants = [ char for char in input_string if char in __CONSONANTS ]
+    vowels     = [ char for char in input_string if char in __VOWELS ]
 
-    return consonants, vowels
+    return "".join(consonants), vowels
 
 def __surname_triplet(input_string):
+    """__surname_triplet(input_string) -> string"""
     consonants, vowels = __consonants_and_vowels(input_string)
 
     return __common_triplet(input_string, consonants, vowels)
 
 def __name_triplet(input_string):
+    """__name_triplet(input_string) -> string"""
     if input_string == '':
-        # highly unlikely: no first name, like Indian people whose passport
-        # reports just one word 
+        # highly unlikely: no first name, like for instance some Indian persons
+        # with only one name on the passport
         return 'XXX'
 
     consonants, vowels = __consonants_and_vowels(input_string)

@@ -129,7 +129,7 @@ class TestBugs(unittest.TestCase):
         actual = build("mario", "rossi", datetime.datetime(1991, 1, 25), "M", "G693")
         self.assertEquals(expected, actual)
 
-    def test_02_foreign_people_bug(self):
+    def test_02_no_first_name_bug(self):
         self.assertTrue(isvalid("XXXXXX77A01Z2P6B"))
 
     def test_03_get_birthday_format(self):
