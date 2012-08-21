@@ -1,0 +1,82 @@
+
+Python library for Italian fiscal code
+
+codicefiscale is a Python library for working with Italian fiscal code numbers
+officially known as Italy's Codice Fiscale.
+
+Copyright (C) 2009-2012 Emanuele Rocca
+Homepage: https://github.com/ema/pycodicefiscale
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+codicefiscale Module Documentation
+==================================
+
+A quick example
+---------------
+>>> import datetime
+>>> from codicefiscale import build
+>>>
+>>> build('Rocca', 'Emanuele', datetime.datetime(1983, 11, 18), 'M', 'D969')
+'RCCMNL83S18D969H'
+
+Module Contents
+---------------
+``build(surname, name, birthday, sex, municipality) -> string``
+
+    Computes the fiscal code for the given person data.
+
+    eg: build('Rocca', 'Emanuele', datetime.datetime(1983, 11, 18), 'M', 'D969') 
+        -> RCCMNL83S18D969H
+
+
+``control_code(input_string) -> int``
+
+    Computes the control code for the given input_string string. The expected
+    input_string is the first 15 characters of a fiscal code.
+
+    eg: control_code('RCCMNL83S18D969') -> 'H'
+
+
+``get_birthday(code) -> string``
+
+    The birthday of the person whose fiscal code is 'code', in the format
+    DD-MM-YY. 
+
+    Unfortunately it's not possible to guess the four digit birth year, given
+    that the Italian fiscal code uses only the last two digits (1983 -> 83).
+    Therefore, this function returns a string and not a datetime object.
+
+    eg: birthday('RCCMNL83S18D969H') -> 18-11-83
+
+
+``get_sex(code) -> string``
+
+    The sex of the person whose fiscal code is 'code'.
+
+    eg: sex('RCCMNL83S18D969H') -> 'M'
+        sex('CNTCHR83T41D969D') -> 'F'
+
+
+``isvalid(code) -> bool``
+
+    This function checks if the given fiscal code is syntactically valid.
+
+    eg: isvalid('RCCMNL83S18D969H') -> True
+        isvalid('RCCMNL83S18D969') -> False
+
+
+
