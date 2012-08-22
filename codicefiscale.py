@@ -42,7 +42,8 @@ def isvalid(code):
     This function checks if the given fiscal code is syntactically valid.
 
     eg: isvalid('RCCMNL83S18D969H') -> True
-        isvalid('RCCMNL83S18D969') -> False"""
+        isvalid('RCCMNL83S18D969') -> False
+    """
     return type(code) is str and re.match(PATTERN, code) is not None
 
 # Fiscal code calculation 
@@ -103,7 +104,8 @@ def control_code(input_string):
     Computes the control code for the given input_string string. The expected
     input_string is the first 15 characters of a fiscal code.
 
-    eg: control_code('RCCMNL83S18D969') -> 'H'"""
+    eg: control_code('RCCMNL83S18D969') -> 'H'
+    """
     assert len(input_string) == 15
 
     # building conversion tables for even and odd characters positions
@@ -142,7 +144,8 @@ def build(surname, name, birthday, sex, municipality):
     Computes the fiscal code for the given person data.
 
     eg: build('Rocca', 'Emanuele', datetime.datetime(1983, 11, 18), 'M', 'D969') 
-        -> RCCMNL83S18D969H"""
+        -> RCCMNL83S18D969H
+    """
 
     # RCCMNL
     output = __surname_triplet(surname) + __name_triplet(name)
@@ -170,14 +173,14 @@ def build(surname, name, birthday, sex, municipality):
 def get_birthday(code):
     """``get_birthday(code) -> string``
 
-    The birthday of the person whose fiscal code is 'code', in the format
-    DD-MM-YY. 
+    Birthday of the person whose fiscal code is 'code', in the format DD-MM-YY. 
 
     Unfortunately it's not possible to guess the four digit birth year, given
     that the Italian fiscal code uses only the last two digits (1983 -> 83).
     Therefore, this function returns a string and not a datetime object.
 
-    eg: birthday('RCCMNL83S18D969H') -> 18-11-83"""
+    eg: birthday('RCCMNL83S18D969H') -> 18-11-83
+    """
     assert isvalid(code)
 
     day = int(code[9:11])
@@ -194,7 +197,8 @@ def get_sex(code):
     The sex of the person whose fiscal code is 'code'.
 
     eg: sex('RCCMNL83S18D969H') -> 'M'
-        sex('CNTCHR83T41D969D') -> 'F'"""
+        sex('CNTCHR83T41D969D') -> 'F'
+    """
     
     assert isvalid(code)
 
