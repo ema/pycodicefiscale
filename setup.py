@@ -1,6 +1,11 @@
 #!/usr/bin/python
 
-"""codicefiscale's setup script"""
+"""codicefiscale's setup script.
+
+A new version can be built and uploaded to pypi as follows:
+
+$ python setup.py bdist_egg sdist upload
+"""
 
 from setuptools import setup
 
