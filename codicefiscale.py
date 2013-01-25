@@ -44,7 +44,7 @@ def isvalid(code):
     eg: isvalid('RCCMNL83S18D969H') -> True
         isvalid('RCCMNL83S18D969') -> False
     """
-    return type(code) is str and re.match(PATTERN, code) is not None
+    return isinstance(code, basestring) and re.match(PATTERN, code) is not None
 
 # Fiscal code calculation 
 def __common_triplet(input_string, consonants, vowels):

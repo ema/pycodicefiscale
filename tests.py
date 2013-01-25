@@ -135,5 +135,9 @@ class TestBugs(unittest.TestCase):
     def test_03_get_birthday_format(self):
         self.assertEquals('02-08-23', get_birthday('MRTNTN23M02D969P'))
 
+    def test_04_unicode_handling_isvalid(self):
+        self.assertTrue(isvalid('MRTNTN23M02D969P'))
+        self.assertTrue(isvalid(u'MRTNTN23M02D969P'))
+
 if __name__ == "__main__":
     unittest.main()
