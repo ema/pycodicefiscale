@@ -27,6 +27,7 @@ __version__ = '0.8'
 __author__ = "Emanuele Rocca"
 
 import re
+# pylint: disable=W0402
 import string
 
 __VOWELS = [ 'A', 'E', 'I', 'O', 'U' ]
@@ -34,6 +35,7 @@ __CONSONANTS = list(set(list(string.ascii_uppercase)).difference(__VOWELS))
 
 MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
 
+# pylint: disable=C0301
 PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
 
 def isvalid(code):
@@ -89,7 +91,8 @@ def __name_triplet(input_string):
     if input_string == '':
         # highly unlikely: no first name, like for instance some Indian persons
         # with only one name on the passport
-        return 'XXX'
+        # pylint: disable=W0511
+        return 'XXX' 
 
     consonants, vowels = __consonants_and_vowels(input_string)
     
