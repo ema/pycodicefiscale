@@ -1,12 +1,14 @@
 #!/usr/bin/python
 
-from setuptools import setup, find_packages
+"""codicefiscale's setup script"""
+
+from setuptools import setup
 
 import codicefiscale
 
-longdesc = codicefiscale.__doc__
+LONGDESC = codicefiscale.__doc__
 
-longdesc = """%s
+LONGDESC = """%s
 
 codicefiscale Module Documentation
 ==================================
@@ -21,13 +23,13 @@ A quick example
 
 Module Contents
 ---------------
-""" % longdesc
+""" % LONGDESC
 
 for what in dir(codicefiscale):
     if not what.startswith("__"):
         obj = getattr(codicefiscale, what)
         if callable(obj) and obj.__doc__:
-            longdesc += obj.__doc__ + "\n\n\n"
+            LONGDESC += obj.__doc__ + "\n\n\n"
 
 setup(
        name = 'codicefiscale',
@@ -40,6 +42,6 @@ setup(
        zip_safe = True,
        license='LGPL',
        description="Python library for Italian fiscal code (codicefiscale)",
-       long_description = longdesc,
+       long_description = LONGDESC,
        test_suite = "tests"
 )
