@@ -123,7 +123,11 @@ class TestRepos(unittest.TestCase):
 class TestBugs(unittest.TestCase):
 
     def test_01_locale_bug(self):
-        locale.setlocale(locale.LC_ALL, "it_IT")
+        try:
+            locale.setlocale(locale.LC_ALL, "it_IT")
+        except locale.Error:
+            print "Skipping test_01_locale_bug, it_IT not available"
+            return
 
         expected = "MRARSS91A25G693C"
         actual = build("mario", "rossi", datetime.datetime(1991, 1, 25), "M", "G693")
