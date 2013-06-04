@@ -110,6 +110,15 @@ class TestRepos(unittest.TestCase):
                 datetime.datetime(1991, 1, 25),
                 'M',
                 'F839'
+            ),
+
+            'HRYXXX11S05Z222K': (
+                "Haryana", 
+                # Indian person with only one name reported on her passport
+                "",
+                datetime.datetime(1911, 11, 5),
+                'M',
+                'Z222'
             )
         }
         
