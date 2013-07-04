@@ -1,29 +1,14 @@
 Python library for Italian fiscal code
 
+.. image:: https://secure.travis-ci.org/ema/pycodicefiscale.png?branch=master
+   :target: http://travis-ci.org/ema/pycodicefiscale 
+
 codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
 
 Copyright (C) 2009-2013 Emanuele Rocca
 
 Homepage: https://github.com/ema/pycodicefiscale
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-|BuildStatus|_
-.. |BuildStatus| image:: https://travis-ci.org/ema/pycodicefiscale.png?branch
-.. _BuildStatus: https://travis-ci.org/ema/pycodicefiscale
 
 codicefiscale Module Documentation
 ==================================
