@@ -1,4 +1,3 @@
-
 Python library for Italian fiscal code
 
 codicefiscale is a Python library for working with Italian fiscal code numbers
@@ -22,6 +21,9 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+|BuildStatus|_
+.. |BuildStatus| image:: https://travis-ci.org/ema/pycodicefiscale.png?branch
+.. _BuildStatus: https://travis-ci.org/ema/pycodicefiscale
 
 codicefiscale Module Documentation
 ==================================
