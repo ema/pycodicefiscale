@@ -4,7 +4,7 @@ Python library for Italian fiscal code
 codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
 
-Copyright (C) 2009-2013 Emanuele Rocca
+Copyright (C) 2009-2013 Emanuele Rocca, eadmaster
 
 Homepage: https://github.com/ema/pycodicefiscale
 
@@ -23,8 +23,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-__version__ = '0.8'
-__author__ = "Emanuele Rocca"
+__version__ = '0.9'
+__author__ = "Emanuele Rocca, eadmaster"
 
 import re
 # pylint: disable=W0402
@@ -37,6 +37,10 @@ MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
 
 # pylint: disable=C0301
 PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
+
+import os
+MUNICIPALITY_DB_PATH = os.path.dirname(os.path.realpath(__file__)) + os.sep + "codici_catastali.csv"
+
 
 def isvalid(code):
     """``isvalid(code) -> bool``
@@ -162,8 +166,16 @@ def build(surname, name, birthday, sex, municipality):
     # RCCMNL83S18
     output += "%02d" % (sex == 'M' and birthday.day or 40 + birthday.day)
 
-    # RCCMNL83S18D969 
-    output += municipality
+    # RCCMNL83S18D969
+    file = open(MUNICIPALITY_DB_PATH,'rU')
+    for line in file:
+        line_parsed_tuple = string.split(line,',')
+        if(municipality.lower()==line_parsed_tuple[1]):
+            output += municipality.upper()
+        elif(municipality.lower()==line_parsed_tuple[0]):
+            output += line_parsed_tuple[1].upper()
+    #else
+    if(not len(output)==15): raise Exception("municipality not found in the db")
 
     # RCCMNL83S18D969H
     output += control_code(output)
@@ -206,3 +218,67 @@ def get_sex(code):
     assert isvalid(code)
 
     return int(code[9:11]) < 32 and 'M' or 'F'
+
+
+def get_municipality(code):
+    """``get_municipality(code) -> string``
+
+    The municipality of the person whose fiscal code is 'code'.
+
+    eg: ...
+    """
+    assert isvalid(code)
+    
+    subcode=code[11:15]
+    subcode=subcode.lower()
+
+    file = open(MUNICIPALITY_DB_PATH,'rU')
+    for line in file:
+        line_parsed_tuple = string.split(line,',')
+        if(subcode==line_parsed_tuple[1]):
+            return(line_parsed_tuple[0].capitalize()+" ("+line_parsed_tuple[2].rstrip().upper()+")")
+    #else
+    raise Exception("municipality not found in db")
+
+
+# CLI interface for standalone use
+import sys
+import datetime
+if __name__ == '__main__':
+
+	if(len(sys.argv)==6):
+		try:
+			surname=sys.argv[1]
+			name=sys.argv[2]
+			birthday=sys.argv[3]
+			sex=sys.argv[4]
+			municipality=sys.argv[5]
+			code = build(surname, name, datetime.datetime(int(birthday[0:4]),int(birthday[4:6]),int(birthday[6:8])), sex, municipality)
+			print(code)
+		except:
+			print("codicefiscale error: "+sys.exc_info()[1].args[0])
+			exit(1)
+		exit(0)
+	
+	elif(len(sys.argv)==2):
+		code=sys.argv[1]
+		code = code.upper()
+		# check if well-formed
+		if not isvalid(code):
+			print("codicefiscale: code is NOT valid")
+			exit(1)
+		# else
+		print("codicefiscale: code is valid, trying to decode...")
+		print("surname contains: " + code[0:3])
+		# TODO: try to guess the surname from a db
+		print("name contains: " + code[3:6])
+		# TODO: try to guess the name from a db
+		print("birthday: " + get_birthday(code))
+		print("sex: " + get_sex(code))
+		print("municipality: " + get_municipality(code))
+		exit(0)
+
+
+	#else print usage
+	print("usage: codicefiscale CODE|SURNAME NAME YYYYMMDD SEX MUNICIPALITY")
+	exit(0)
