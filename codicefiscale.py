@@ -162,8 +162,17 @@ def build(surname, name, birthday, sex, municipality):
     # RCCMNL83S18
     output += "%02d" % (sex == 'M' and birthday.day or 40 + birthday.day)
 
-    # RCCMNL83S18D969 
-    output += municipality
+    # RCCMNL83S18D969
+    # try to find the municipality in the db
+    file = open('codici_catastali.csv','rU')
+    for line in file:
+        line_parsed_tuple = string.split(line,',')
+        if(municipality.lower()==line_parsed_tuple[1]):
+            output += municipality.upper()
+        elif(municipality.lower()==line_parsed_tuple[0]):
+            output += line_parsed_tuple[1].upper()
+    #else
+    if(not len(output)==15): raise Exception("municipality not found in db")
 
     # RCCMNL83S18D969H
     output += control_code(output)
@@ -206,3 +215,67 @@ def get_sex(code):
     assert isvalid(code)
 
     return int(code[9:11]) < 32 and 'M' or 'F'
+
+
+def get_municipality(code):
+    """``get_municipality(code) -> string``
+
+    The municipality of the person whose fiscal code is 'code'.
+
+    eg: ...
+    """
+    assert isvalid(code)
+    
+    subcode=code[11:15]
+    subcode=subcode.lower()
+    
+    file = open('codici_catastali.csv','rU')
+    for line in file:
+        line_parsed_tuple = string.split(line,',')
+        if(subcode==line_parsed_tuple[1]):
+            return(string.capitalize(line_parsed_tuple[0]))
+    #else
+    raise Exception("municipality not found in db")
+
+
+# CLI interface for standalone use
+import sys
+import datetime
+if __name__ == '__main__':
+
+	if(len(sys.argv)==6):
+		try:
+			surname=sys.argv[1]
+			name=sys.argv[2]
+			birthday=sys.argv[3]
+			sex=sys.argv[4]
+			municipality=sys.argv[5]
+			code = build(surname, name, datetime.datetime(int(birthday[0:4]),int(birthday[4:6]),int(birthday[6:8])), sex, municipality)
+			print(code)
+		except:
+			print("codicefiscale error: "+sys.exc_info()[1].args[0])
+			exit(1)
+		exit(0)
+	
+	elif(len(sys.argv)==2):
+		code=sys.argv[1]
+		code = code.upper()
+		# check if well-formed
+		if not isvalid(code):
+			print("codicefiscale: code is NOT valid")
+			exit(1)
+		# else
+		print("codicefiscale: code is valid, trying to decode...")
+		print("surname contains: " + code[0:3])
+		# TODO: try to guess the name from a db
+		print("name contains: " + code[3:6])
+		# TODO: try to guess the name from a db
+		print("birthday: " + get_birthday(code))
+		print("sex: " + get_sex(code))
+		print("municipality: " + get_municipality(code))
+		exit(0)
+
+
+	#else print usage
+	print("usage: codicefiscale CODE|SURNAME NAME YYYYMMDD SEX MUNICIPALITY")
+	exit(0)
