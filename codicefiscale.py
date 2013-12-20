@@ -4,7 +4,7 @@ Python library for Italian fiscal code
 codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
 
-Copyright (C) 2009-2013 Emanuele Rocca
+Copyright (C) 2009-2013 Emanuele Rocca, eadmaster
 
 Homepage: https://github.com/ema/pycodicefiscale
 
@@ -23,8 +23,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-__version__ = '0.8'
-__author__ = "Emanuele Rocca"
+__version__ = '0.9'
+__author__ = "Emanuele Rocca, eadmaster"
 
 import re
 # pylint: disable=W0402
@@ -37,6 +37,10 @@ MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
 
 # pylint: disable=C0301
 PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
+
+import os
+MUNICIPALITY_DB_PATH = os.path.dirname(os.path.realpath(__file__)) + os.sep + "codici_catastali.csv"
+
 
 def isvalid(code):
     """``isvalid(code) -> bool``
@@ -163,8 +167,7 @@ def build(surname, name, birthday, sex, municipality):
     output += "%02d" % (sex == 'M' and birthday.day or 40 + birthday.day)
 
     # RCCMNL83S18D969
-    # try to find the municipality in the db
-    file = open('codici_catastali.csv','rU')
+    file = open(MUNICIPALITY_DB_PATH,'rU')
     for line in file:
         line_parsed_tuple = string.split(line,',')
         if(municipality.lower()==line_parsed_tuple[1]):
@@ -172,7 +175,7 @@ def build(surname, name, birthday, sex, municipality):
         elif(municipality.lower()==line_parsed_tuple[0]):
             output += line_parsed_tuple[1].upper()
     #else
-    if(not len(output)==15): raise Exception("municipality not found in db")
+    if(not len(output)==15): raise Exception("municipality not found in the db")
 
     # RCCMNL83S18D969H
     output += control_code(output)
@@ -228,12 +231,12 @@ def get_municipality(code):
     
     subcode=code[11:15]
     subcode=subcode.lower()
-    
-    file = open('codici_catastali.csv','rU')
+
+    file = open(MUNICIPALITY_DB_PATH,'rU')
     for line in file:
         line_parsed_tuple = string.split(line,',')
         if(subcode==line_parsed_tuple[1]):
-            return(string.capitalize(line_parsed_tuple[0]))
+            return(line_parsed_tuple[0].capitalize()+" ("+line_parsed_tuple[2].rstrip().upper()+")")
     #else
     raise Exception("municipality not found in db")
 
