@@ -270,7 +270,7 @@ if __name__ == '__main__':
 		# else
 		print("codicefiscale: code is valid, trying to decode...")
 		print("surname contains: " + code[0:3])
-		# TODO: try to guess the name from a db
+		# TODO: try to guess the surname from a db
 		print("name contains: " + code[3:6])
 		# TODO: try to guess the name from a db
 		print("birthday: " + get_birthday(code))
