@@ -5,6 +5,7 @@ codicefiscale is a Python library for working with Italian fiscal code numbers
 officially known as Italy's Codice Fiscale.
 
 Copyright (C) 2009-2013 Emanuele Rocca
+Copyright (C) 2014 Augusto Destrero (support for "Omocodie" [http://it.wikipedia.org/wiki/Omocodia])
 
 Homepage: https://github.com/ema/pycodicefiscale
 
@@ -41,7 +42,7 @@ _pattern = re.compile("^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTU
 def isvalid(code):
     """``isvalid(code) -> bool``
 
-    This function checks if the given fiscal code is syntactically valid.
+    This function checks if the given fiscal code is valid.
 
     eg: isvalid('RCCMNL83S18D969H') -> True
         isvalid('RCCMNL83S18D969') -> False
