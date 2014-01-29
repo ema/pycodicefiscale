@@ -23,8 +23,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-__version__ = '0.8'
-__author__ = "Emanuele Rocca"
+__version__ = '0.9'
+__author__ = "Emanuele Rocca, Augusto Destrero"
 
 import re
 # pylint: disable=W0402
@@ -36,7 +36,7 @@ __CONSONANTS = list(set(list(string.ascii_uppercase)).difference(__VOWELS))
 MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
 
 # pylint: disable=C0301
-PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
+_pattern = re.compile("^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$")
 
 def isvalid(code):
     """``isvalid(code) -> bool``
@@ -46,7 +46,14 @@ def isvalid(code):
     eg: isvalid('RCCMNL83S18D969H') -> True
         isvalid('RCCMNL83S18D969') -> False
     """
-    return isinstance(code, basestring) and re.match(PATTERN, code) is not None
+    if not isinstance(code, basestring):
+        return False
+    if len(code) != 16:
+        return False
+    code = code.upper()
+    if _pattern.match(code) is None:
+        return False
+    return (control_code(code[0:15]) == code[15])
 
 # Fiscal code calculation 
 def __common_triplet(input_string, consonants, vowels):
@@ -186,11 +193,16 @@ def get_birthday(code):
     """
     assert isvalid(code)
 
-    day = int(code[9:11])
-    day = day < 32 and day or day - 40
+    day_year_charmap = {}
+    for idx, char in enumerate(string.digits):
+        day_year_charmap[char] = idx
+    for idx, char in enumerate('LMNPQRSTUV'):
+        day_year_charmap[char] = idx
 
+    day = day_year_charmap[code[9]] * 10 + day_year_charmap[code[10]]
+    day = day < 32 and day or day - 40
     month = MONTHSCODE.index(code[8]) + 1
-    year = int(code[6:8])
+    year = day_year_charmap[code[6]] * 10 + day_year_charmap[code[7]]
 
     return "%02d-%02d-%02d" % (day, month, year)
 
