@@ -4,31 +4,39 @@ import unittest
 import datetime
 import locale
 
-from codicefiscale import isvalid, get_birthday, get_sex, control_code, build
+from codicefiscale import (
+    isvalid,
+    get_birthday,
+    get_municipality,
+    get_sex,
+    control_code,
+    build
+)
+
 
 class TestRepos(unittest.TestCase):
-    
+
     def test_isvalid(self):
-        invalid = [ None, True, 16, "RCCMNL", 
-                    # the first 'I' shouldn't be there
-                    "CSTNGL22I10D086I" ]
+        invalid = [None, True, 16, "RCCMNL",
+                   # the first 'I' shouldn't be there
+                   "CSTNGL22I10D086I"]
 
         for cf in invalid:
             self.assertFalse(isvalid(cf))
-        
-        valid = ( 'MRTNTN23M02D969P', 
-                  'RCCMNL83S18D969H', 
-                  'MRSMSR81D60Z611H',
-                  'CNTCHR83T41D969D', 
-                  'XXXXXX77A01Z2P6B',
-                  'FOXDRA26C24H872Y',
-                  'MAILCU91A25F839D' )
+
+        valid = ('MRTNTN23M02D969P',
+                 'RCCMNL83S18D969H',
+                 'MRSMSR81D60Z611H',
+                 'CNTCHR83T41D969D',
+                 'XXXXXX77A01Z2P6B',
+                 'FOXDRA26C24H872Y',
+                 'MAILCU91A25F839D')
 
         for cf in valid:
             self.assertTrue(isvalid(cf))
 
     def test_get_birthday(self):
-        inputs = { 
+        inputs = {
             'MRTNTN23M02D969P': '02-08-23',
             'RCCMNL83S18D969H': '18-11-83',
             'MRSMSR81D60Z611H': '20-04-81',
@@ -36,12 +44,12 @@ class TestRepos(unittest.TestCase):
             'FOXDRA26C24H872Y': '24-03-26',
             'MAILCU91A25F839D': '25-01-91'
         }
-                     
+
         for cf, expected in inputs.items():
             self.assertEquals(expected, get_birthday(cf))
 
     def test_get_sex(self):
-        inputs = { 
+        inputs = {
             'MRTNTN23M02D969P': 'M',
             'RCCMNL83S18D969H': 'M',
             'RCDLSN84S16D969Z': 'M',
@@ -50,12 +58,25 @@ class TestRepos(unittest.TestCase):
             'FOXDRA26C24H872Y': 'M',
             'MAILCU91A25F839D': 'M'
         }
-                     
+
         for cf, expected in inputs.items():
             self.assertEquals(expected, get_sex(cf))
 
+    def test_get_municipality(self):
+        inputs = {
+            'CNTCHR83T41D969D': 'GENOVA',
+            'FOXDRA26C24H872Y': 'SANGIANO',
+            'MAILCU91A25F839D': 'NAPOLI',
+            'MRSMSR81D60Z611H': 'ESTERO',
+            'MRTNTN23M02D969P': 'GENOVA',
+            'RCCMNL83S18D969H': 'GENOVA',
+            'RCDLSN84S16D969Z': 'GENOVA',
+        }
+        for cf, expected in inputs.items():
+            self.assertEquals(expected, get_municipality(cf))
+
     def test_control_code(self):
-        inputs = { 
+        inputs = {
             # fiscal codes tested in this module
             'MRTNTN23M02D969': 'P',
             'MRSMSR81D60Z611': 'H',
@@ -71,34 +92,34 @@ class TestRepos(unittest.TestCase):
             self.assertEquals(expected, control_code(cf))
 
     def test_build(self):
-        tests = { 
+        tests = {
 
-            'RCCMNL83S18D969H': ( 
-                "Rocca", "Emanuele", 
+            'RCCMNL83S18D969H': (
+                "Rocca", "Emanuele",
                 datetime.datetime(1983, 11, 18),
-                'M','D969'
+                'M', 'D969'
             ),
 
-            'CNTCHR83T41D969D': ( 
-                "Cintoi", "Chiara", 
+            'CNTCHR83T41D969D': (
+                "Cintoi", "Chiara",
                 datetime.datetime(1983, 12, 1),
-                'F','D969'
+                'F', 'D969'
             ),
 
-            'BNCSFN85T58G702W': ( 
-                "Bianucci", "Stefania", 
+            'BNCSFN85T58G702W': (
+                "Bianucci", "Stefania",
                 datetime.datetime(1985, 12, 18),
-                'F','G702'
+                'F', 'G702'
             ),
 
-            'RCDLSN84S16D969Z': ( 
-                "Arcidiacono", "Alessandro", 
+            'RCDLSN84S16D969Z': (
+                "Arcidiacono", "Alessandro",
                 datetime.datetime(1984, 11, 16),
-                'M','D969'
+                'M', 'D969'
             ),
 
-            'FOXDRA26C24H872Y': ( 
-                "Fo", "Dario", 
+            'FOXDRA26C24H872Y': (
+                "Fo", "Dario",
                 datetime.datetime(1926, 3, 24),
                 'M',
                 # born in Sangiano
@@ -113,7 +134,7 @@ class TestRepos(unittest.TestCase):
             ),
 
             'HRYXXX11S05Z222K': (
-                "Haryana", 
+                "Haryana",
                 # Indian person with only one name reported on her passport
                 "",
                 datetime.datetime(1911, 11, 5),
@@ -121,13 +142,14 @@ class TestRepos(unittest.TestCase):
                 'Z222'
             )
         }
-        
+
         for expected, data in tests.items():
-            cf = build(surname=data[0], name=data[1], 
+            cf = build(surname=data[0], name=data[1],
                        birthday=data[2], sex=data[3],
                        municipality=data[4])
-        
+
             self.assertEquals(expected, cf)
+
 
 class TestBugs(unittest.TestCase):
 
@@ -139,7 +161,15 @@ class TestBugs(unittest.TestCase):
             return
 
         expected = "MRARSS91A25G693C"
-        actual = build("mario", "rossi", datetime.datetime(1991, 1, 25), "M", "G693")
+        actual = build(
+            "mario",
+            "rossi",
+            datetime.datetime(
+                1991,
+                1,
+                25),
+            "M",
+            "G693")
         self.assertEquals(expected, actual)
 
     def test_02_no_first_name_bug(self):

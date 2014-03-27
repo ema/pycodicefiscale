@@ -59,7 +59,14 @@ Module Contents
 
     eg: sex('RCCMNL83S18D969H') -> 'M'
         sex('CNTCHR83T41D969D') -> 'F'
-    
+
+
+``get_municipality(code) -> string``
+
+    The municipality of the person whose fiscal code is 'code'.
+
+    eg: sex('RCCMNL83S18D969H') -> 'GENOVA'
+        sex('CNTCHR83T41D969D') -> 'GENOVA'
 
 
 ``isvalid(code) -> bool``
@@ -68,7 +75,4 @@ Module Contents
 
     eg: isvalid('RCCMNL83S18D969H') -> True
         isvalid('RCCMNL83S18D969') -> False
-    
-
-
 
