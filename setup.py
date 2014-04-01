@@ -7,7 +7,7 @@ A new version can be built and uploaded to pypi as follows:
 $ python setup.py bdist_egg sdist upload
 """
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 import codicefiscale
 
@@ -37,16 +37,17 @@ for what in dir(codicefiscale):
             LONGDESC += obj.__doc__ + "\n\n\n"
 
 setup(
-       name = 'codicefiscale',
-       author = codicefiscale.__author__,
-       author_email = 'ema@linux.it',
-       url='https://github.com/ema/pycodicefiscale',
-       download_url='https://github.com/ema/pycodicefiscale/downloads',
-       version = codicefiscale.__version__,
-       py_modules = ['codicefiscale'],
-       zip_safe = True,
-       license='LGPL',
-       description="Python library for Italian fiscal code (codicefiscale)",
-       long_description = LONGDESC,
-       test_suite = "tests"
+    name='codicefiscale',
+    author=codicefiscale.__author__,
+    author_email='ema@linux.it',
+    url='https://github.com/ema/pycodicefiscale',
+    download_url='https://github.com/ema/pycodicefiscale/downloads',
+    version=codicefiscale.__version__,
+    packages=find_packages(exclude=['ez_setup']),
+    py_modules=['codicefiscale'],
+    zip_safe=True,
+    license='LGPL',
+    description="Python library for Italian fiscal code (codicefiscale)",
+    long_description=LONGDESC,
+    test_suite="tests"
 )

@@ -1,0 +1,4 @@
+global-exclude *pyc
+recursive-include codicefiscale *.py
+include COPYING
+include *.rst
