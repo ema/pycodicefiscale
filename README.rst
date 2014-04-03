@@ -49,7 +49,7 @@ Module Contents
     that the Italian fiscal code uses only the last two digits (1983 -> 83).
     Therefore, this function returns a string and not a datetime object.
 
-    eg: birthday('RCCMNL83S18D969H') -> 18-11-83
+    eg: get_birthday('RCCMNL83S18D969H') -> 18-11-83
     
 
 
@@ -57,9 +57,16 @@ Module Contents
 
     The sex of the person whose fiscal code is 'code'.
 
-    eg: sex('RCCMNL83S18D969H') -> 'M'
-        sex('CNTCHR83T41D969D') -> 'F'
-    
+    eg: get_sex('RCCMNL83S18D969H') -> 'M'
+        get_sex('CNTCHR83T41D969D') -> 'F'
+
+
+``get_municipality(code) -> string``
+
+    The municipality of the person whose fiscal code is 'code'.
+
+    eg: get_municipality('RCCMNL83S18D969H') -> 'GENOVA'
+        get_municipality('CNTCHR83T41D969D') -> 'GENOVA'
 
 
 ``isvalid(code) -> bool``
@@ -68,7 +75,4 @@ Module Contents
 
     eg: isvalid('RCCMNL83S18D969H') -> True
         isvalid('RCCMNL83S18D969') -> False
-    
-
-
 
