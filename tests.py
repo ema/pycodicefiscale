@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 import unittest
 
@@ -135,7 +136,7 @@ class TestBugs(unittest.TestCase):
         try:
             locale.setlocale(locale.LC_ALL, "it_IT")
         except locale.Error:
-            print "Skipping test_01_locale_bug, it_IT not available"
+            print("Skipping test_01_locale_bug, it_IT not available")
             return
 
         expected = "MRARSS91A25G693C"
