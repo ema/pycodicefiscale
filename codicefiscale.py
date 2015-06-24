@@ -38,6 +38,13 @@ MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
 # pylint: disable=C0301
 PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
 
+# Python 3 compatibility
+try:
+    basestring
+except NameError:
+    basestring = str
+
+
 def isvalid(code):
     """``isvalid(code) -> bool``
 
