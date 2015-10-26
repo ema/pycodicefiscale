@@ -60,18 +60,14 @@ def __common_triplet(input_string, consonants, vowels):
     """__common_triplet(input_string, consonants, vowels) -> string"""
     output = consonants
 
-    if len(input_string) > 2:
-        # likely
-        stopat = 3
-    else:
-        # unlikely (eg: surname = Fo)
-        stopat = 2 
-
-    while len(output) < stopat:
-        output += vowels.pop(0)
-    
-    if len(output) == 2:
-        output += 'X'
+    while len(output) < 3:
+        try:
+            output += vowels.pop(0)
+        except IndexError:
+            # If there are less wovels than needed to fill the triplet,
+            # (e.g. for a surname as "Fo'" or "Hu" or the corean "Y")
+            # fill it with 'X';
+            output += 'X'
 
     return output[:3]
 
