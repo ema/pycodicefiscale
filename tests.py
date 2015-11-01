@@ -21,9 +21,13 @@ class TestRepos(unittest.TestCase):
                   'RCCMNL83S18D969H', 
                   'MRSMSR81D60Z611H',
                   'CNTCHR83T41D969D', 
-                  'XXXXXX77A01Z2P6B',
                   'FOXDRA26C24H872Y',
-                  'MAILCU91A25F839D' )
+                  'MAILCU91A25F839D',
+                  'RSSMRA45C12F205C',
+                  'RSSMRA45C12F20RX',
+                  'RSSMRA45C12F2L5N',
+                  'RSSMRA45C12F2LRI',
+                  'RSSMRAQRCMNFNLRG',)
 
         for cf in valid:
             self.assertTrue(isvalid(cf))
@@ -35,7 +39,12 @@ class TestRepos(unittest.TestCase):
             'MRSMSR81D60Z611H': '20-04-81',
             'CNTCHR83T41D969D': '01-12-83',
             'FOXDRA26C24H872Y': '24-03-26',
-            'MAILCU91A25F839D': '25-01-91'
+            'MAILCU91A25F839D': '25-01-91',
+            'RSSMRA45C12F205C': '12-03-45',
+            'RSSMRA45C12F20RX': '12-03-45',
+            'RSSMRA45C12F2L5N': '12-03-45',
+            'RSSMRA45C12F2LRI': '12-03-45',
+            'RSSMRAQRCMNFNLRG': '12-03-45',
         }
                      
         for cf, expected in inputs.items():
@@ -158,13 +167,10 @@ class TestBugs(unittest.TestCase):
         actual = build("mario", "rossi", datetime.datetime(1991, 1, 25), "M", "G693")
         self.assertEquals(expected, actual)
 
-    def test_02_no_first_name_bug(self):
-        self.assertTrue(isvalid("XXXXXX77A01Z2P6B"))
-
-    def test_03_get_birthday_format(self):
+    def test_02_get_birthday_format(self):
         self.assertEquals('02-08-23', get_birthday('MRTNTN23M02D969P'))
 
-    def test_04_unicode_handling_isvalid(self):
+    def test_03_unicode_handling_isvalid(self):
         self.assertTrue(isvalid('MRTNTN23M02D969P'))
         self.assertTrue(isvalid(u'MRTNTN23M02D969P'))
 
