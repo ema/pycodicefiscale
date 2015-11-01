@@ -120,7 +120,22 @@ class TestRepos(unittest.TestCase):
                 datetime.datetime(1911, 11, 5),
                 'M',
                 'Z222'
-            )
+            ),
+
+            'FOXMRA83S18D969V': (
+                "Fo'", "Mario",
+                # Short surname with apostrophe
+                datetime.datetime(1983, 11, 18),
+                'M','D969'
+            ),
+
+            'YXXAXX83S18D969R': (
+                "Y", "A",
+                # Extremely short surname, and name (Korean example)
+                datetime.datetime(1983, 11, 18),
+                'M','D969'
+            ),
+
         }
         
         for expected, data in tests.items():
