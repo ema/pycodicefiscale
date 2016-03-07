@@ -163,7 +163,7 @@ def build(surname, name, birthday, sex, municipality):
     output += MONTHSCODE[birthday.month - 1]
 
     # RCCMNL83S18
-    output += "%02d" % (sex == 'M' and birthday.day or 40 + birthday.day)
+    output += "%02d" % (sex.upper() == 'M' and birthday.day or 40 + birthday.day)
 
     # RCCMNL83S18D969 
     output += municipality
