@@ -31,10 +31,10 @@ import re
 import string
 import random
 
-__VOWELS = [ 'A', 'E', 'I', 'O', 'U' ]
+__VOWELS = ['A', 'E', 'I', 'O', 'U']
 __CONSONANTS = list(set(list(string.ascii_uppercase)).difference(__VOWELS))
 
-MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
+MONTHSCODE = ['A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T']
 
 # pylint: disable=C0301
 PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
@@ -58,6 +58,7 @@ def isvalid(code):
             re.match(PATTERN, code) is not None and
             control_code(code[:-1]) == code[-1:])
 
+
 # Fiscal code calculation
 def __common_triplet(input_string, consonants, vowels):
     """__common_triplet(input_string, consonants, vowels) -> string"""
@@ -74,6 +75,7 @@ def __common_triplet(input_string, consonants, vowels):
 
     return output[:3]
 
+
 def __consonants_and_vowels(input_string):
     """__consonants_and_vowels(input_string) -> (string, list)
 
@@ -81,16 +83,18 @@ def __consonants_and_vowels(input_string):
     """
     input_string = input_string.upper().replace(' ', '')
 
-    consonants = [ char for char in input_string if char in __CONSONANTS ]
-    vowels     = [ char for char in input_string if char in __VOWELS ]
+    consonants = [char for char in input_string if char in __CONSONANTS]
+    vowels = [char for char in input_string if char in __VOWELS]
 
     return "".join(consonants), vowels
+
 
 def __surname_triplet(input_string):
     """__surname_triplet(input_string) -> string"""
     consonants, vowels = __consonants_and_vowels(input_string)
 
     return __common_triplet(input_string, consonants, vowels)
+
 
 def __name_triplet(input_string):
     """__name_triplet(input_string) -> string"""
@@ -106,6 +110,7 @@ def __name_triplet(input_string):
         return "%s%s%s" % (consonants[0], consonants[2], consonants[3])
 
     return __common_triplet(input_string, consonants, vowels)
+
 
 def control_code(input_string):
     """``control_code(input_string) -> int``
@@ -126,8 +131,8 @@ def control_code(input_string):
     for idx, char in enumerate(string.ascii_uppercase):
         even_controlcode[char] = idx
 
-    values = [ 1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8,
-               12, 14, 16, 10, 22, 25, 24, 23 ]
+    values = [1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8,
+              12, 14, 16, 10, 22, 25, 24, 23]
 
     odd_controlcode = {}
 
@@ -146,6 +151,7 @@ def control_code(input_string):
             code += even_controlcode[char]
 
     return string.ascii_uppercase[code % 26]
+
 
 def build(surname, name, birthday, sex, municipality):
     """``build(surname, name, birthday, sex, municipality) -> string``
@@ -166,7 +172,8 @@ def build(surname, name, birthday, sex, municipality):
     output += MONTHSCODE[birthday.month - 1]
 
     # RCCMNL83S18
-    output += "%02d" % (sex.upper() == 'M' and birthday.day or 40 + birthday.day)
+    output += "%02d" % (sex.upper() ==
+                        'M' and birthday.day or 40 + birthday.day)
 
     # RCCMNL83S18D969
     output += municipality
@@ -179,6 +186,8 @@ def build(surname, name, birthday, sex, municipality):
     return output
 
 # info from fiscal code
+
+
 def get_birthday(code):
     """``get_birthday(code) -> string``
 
@@ -200,6 +209,7 @@ def get_birthday(code):
 
     return "%02d-%02d-%02d" % (day, month, year)
 
+
 def get_sex(code):
     """``get_sex(code) -> string``
 
@@ -217,9 +227,11 @@ def get_sex(code):
 def generate_random_code():
     def _genera():
         partial = "{nom_cog}{anno_nasc}{mese_nasc}{gio_nasc_sesso}{comune}".format(
-            nom_cog=''.join([random.choice(string.uppercase) for i in range(6)]),
+            nom_cog=''.join([random.choice(string.uppercase)
+                             for i in range(6)]),
             anno_nasc=''.join([random.choice("123456789") for i in range(2)]),
-            mese_nasc=''.join([random.choice("ABCDEHLMPRST") for i in range(1)]),
+            mese_nasc=''.join([random.choice("ABCDEHLMPRST")
+                               for i in range(1)]),
             gio_nasc_sesso=''.join([random.choice("12") for i in range(2)]),
             comune='A001'
         )
