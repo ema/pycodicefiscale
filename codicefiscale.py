@@ -227,7 +227,7 @@ def get_sex(code):
 def generate_random_code():
     def _genera():
         partial = "{nom_cog}{anno_nasc}{mese_nasc}{gio_nasc_sesso}{comune}".format(
-            nom_cog=''.join([random.choice(string.uppercase)
+            nom_cog=''.join([random.choice(string.ascii_uppercase)
                              for i in range(6)]),
             anno_nasc=''.join([random.choice("123456789") for i in range(2)]),
             mese_nasc=''.join([random.choice("ABCDEHLMPRST")
