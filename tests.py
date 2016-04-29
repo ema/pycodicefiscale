@@ -5,31 +5,31 @@ import unittest
 import datetime
 import locale
 
-from codicefiscale import isvalid, get_birthday, get_sex, control_code, build
+from codicefiscale import isvalid, get_birthday, get_sex, control_code, build, generate_random_code
 
 class TestRepos(unittest.TestCase):
-    
+
     def test_isvalid(self):
-        invalid = [ None, True, 16, "RCCMNL", 
+        invalid = [ None, True, 16, "RCCMNL",
                     # the first 'I' shouldn't be there
                     "CSTNGL22I10D086I" ]
 
         for cf in invalid:
             self.assertFalse(isvalid(cf))
-        
-        valid = ( 'MRTNTN23M02D969P', 
-                  'RCCMNL83S18D969H', 
+
+        valid = ( 'MRTNTN23M02D969P',
+                  'RCCMNL83S18D969H',
                   'MRSMSR81D60Z611H',
-                  'CNTCHR83T41D969D', 
-                  'XXXXXX77A01Z2P6B',
+                  'CNTCHR83T41D969D',
+                  'XXXXXX77A01Z2P6V',
                   'FOXDRA26C24H872Y',
                   'MAILCU91A25F839D' )
 
         for cf in valid:
-            self.assertTrue(isvalid(cf))
+            self.assertTrue(isvalid(cf), cf)
 
     def test_get_birthday(self):
-        inputs = { 
+        inputs = {
             'MRTNTN23M02D969P': '02-08-23',
             'RCCMNL83S18D969H': '18-11-83',
             'MRSMSR81D60Z611H': '20-04-81',
@@ -37,12 +37,12 @@ class TestRepos(unittest.TestCase):
             'FOXDRA26C24H872Y': '24-03-26',
             'MAILCU91A25F839D': '25-01-91'
         }
-                     
+
         for cf, expected in inputs.items():
             self.assertEquals(expected, get_birthday(cf))
 
     def test_get_sex(self):
-        inputs = { 
+        inputs = {
             'MRTNTN23M02D969P': 'M',
             'RCCMNL83S18D969H': 'M',
             'RCDLSN84S16D969Z': 'M',
@@ -51,12 +51,12 @@ class TestRepos(unittest.TestCase):
             'FOXDRA26C24H872Y': 'M',
             'MAILCU91A25F839D': 'M'
         }
-                     
+
         for cf, expected in inputs.items():
             self.assertEquals(expected, get_sex(cf))
 
     def test_control_code(self):
-        inputs = { 
+        inputs = {
             # fiscal codes tested in this module
             'MRTNTN23M02D969': 'P',
             'MRSMSR81D60Z611': 'H',
@@ -72,34 +72,34 @@ class TestRepos(unittest.TestCase):
             self.assertEquals(expected, control_code(cf))
 
     def test_build(self):
-        tests = { 
+        tests = {
 
-            'RCCMNL83S18D969H': ( 
-                "Rocca", "Emanuele", 
+            'RCCMNL83S18D969H': (
+                "Rocca", "Emanuele",
                 datetime.datetime(1983, 11, 18),
                 'M','D969'
             ),
 
-            'CNTCHR83T41D969D': ( 
-                "Cintoi", "Chiara", 
+            'CNTCHR83T41D969D': (
+                "Cintoi", "Chiara",
                 datetime.datetime(1983, 12, 1),
                 'F','D969'
             ),
 
-            'BNCSFN85T58G702W': ( 
-                "Bianucci", "Stefania", 
+            'BNCSFN85T58G702W': (
+                "Bianucci", "Stefania",
                 datetime.datetime(1985, 12, 18),
                 'F','G702'
             ),
 
-            'RCDLSN84S16D969Z': ( 
-                "Arcidiacono", "Alessandro", 
+            'RCDLSN84S16D969Z': (
+                "Arcidiacono", "Alessandro",
                 datetime.datetime(1984, 11, 16),
                 'M','D969'
             ),
 
-            'FOXDRA26C24H872Y': ( 
-                "Fo", "Dario", 
+            'FOXDRA26C24H872Y': (
+                "Fo", "Dario",
                 datetime.datetime(1926, 3, 24),
                 'M',
                 # born in Sangiano
@@ -114,7 +114,7 @@ class TestRepos(unittest.TestCase):
             ),
 
             'HRYXXX11S05Z222K': (
-                "Haryana", 
+                "Haryana",
                 # Indian person with only one name reported on her passport
                 "",
                 datetime.datetime(1911, 11, 5),
@@ -137,13 +137,18 @@ class TestRepos(unittest.TestCase):
             ),
 
         }
-        
+
         for expected, data in tests.items():
-            cf = build(surname=data[0], name=data[1], 
+            cf = build(surname=data[0], name=data[1],
                        birthday=data[2], sex=data[3],
                        municipality=data[4])
-        
+
             self.assertEquals(expected, cf)
+
+    def test_generate_random_code(self):
+        for x in range(200):
+            self.assertTrue(isvalid(generate_random_code()))
+
 
 class TestBugs(unittest.TestCase):
 
@@ -159,7 +164,8 @@ class TestBugs(unittest.TestCase):
         self.assertEquals(expected, actual)
 
     def test_02_no_first_name_bug(self):
-        self.assertTrue(isvalid("XXXXXX77A01Z2P6B"))
+        partial = "XXXXXX77A01Z2P6"
+        self.assertTrue(isvalid("{}{}".format(partial, control_code(partial))))
 
     def test_03_get_birthday_format(self):
         self.assertEquals('02-08-23', get_birthday('MRTNTN23M02D969P'))
@@ -167,6 +173,10 @@ class TestBugs(unittest.TestCase):
     def test_04_unicode_handling_isvalid(self):
         self.assertTrue(isvalid('MRTNTN23M02D969P'))
         self.assertTrue(isvalid(u'MRTNTN23M02D969P'))
+
+    def test_05_really_validate_code(self):
+        self.assertFalse(isvalid("LLLLLL11L11L111O"))
+        self.assertTrue(isvalid("LLLLLL11L11L111L"))
 
 if __name__ == "__main__":
     unittest.main()

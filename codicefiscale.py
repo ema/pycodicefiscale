@@ -29,6 +29,7 @@ __author__ = "Emanuele Rocca"
 import re
 # pylint: disable=W0402
 import string
+import random
 
 __VOWELS = [ 'A', 'E', 'I', 'O', 'U' ]
 __CONSONANTS = list(set(list(string.ascii_uppercase)).difference(__VOWELS))
@@ -53,9 +54,11 @@ def isvalid(code):
     eg: isvalid('RCCMNL83S18D969H') -> True
         isvalid('RCCMNL83S18D969') -> False
     """
-    return isinstance(code, basestring) and re.match(PATTERN, code) is not None
+    return (isinstance(code, basestring) and
+            re.match(PATTERN, code) is not None and
+            control_code(code[:-1]) == code[-1:])
 
-# Fiscal code calculation 
+# Fiscal code calculation
 def __common_triplet(input_string, consonants, vowels):
     """__common_triplet(input_string, consonants, vowels) -> string"""
     output = consonants
@@ -95,10 +98,10 @@ def __name_triplet(input_string):
         # highly unlikely: no first name, like for instance some Indian persons
         # with only one name on the passport
         # pylint: disable=W0511
-        return 'XXX' 
+        return 'XXX'
 
     consonants, vowels = __consonants_and_vowels(input_string)
-    
+
     if len(consonants) > 3:
         return "%s%s%s" % (consonants[0], consonants[2], consonants[3])
 
@@ -141,7 +144,7 @@ def control_code(input_string):
             code += odd_controlcode[char]
         else:
             code += even_controlcode[char]
-    
+
     return string.ascii_uppercase[code % 26]
 
 def build(surname, name, birthday, sex, municipality):
@@ -149,7 +152,7 @@ def build(surname, name, birthday, sex, municipality):
 
     Computes the fiscal code for the given person data.
 
-    eg: build('Rocca', 'Emanuele', datetime.datetime(1983, 11, 18), 'M', 'D969') 
+    eg: build('Rocca', 'Emanuele', datetime.datetime(1983, 11, 18), 'M', 'D969')
         -> RCCMNL83S18D969H
     """
 
@@ -165,7 +168,7 @@ def build(surname, name, birthday, sex, municipality):
     # RCCMNL83S18
     output += "%02d" % (sex.upper() == 'M' and birthday.day or 40 + birthday.day)
 
-    # RCCMNL83S18D969 
+    # RCCMNL83S18D969
     output += municipality
 
     # RCCMNL83S18D969H
@@ -175,11 +178,11 @@ def build(surname, name, birthday, sex, municipality):
 
     return output
 
-# info from fiscal code 
+# info from fiscal code
 def get_birthday(code):
     """``get_birthday(code) -> string``
 
-    Birthday of the person whose fiscal code is 'code', in the format DD-MM-YY. 
+    Birthday of the person whose fiscal code is 'code', in the format DD-MM-YY.
 
     Unfortunately it's not possible to guess the four digit birth year, given
     that the Italian fiscal code uses only the last two digits (1983 -> 83).
@@ -205,7 +208,20 @@ def get_sex(code):
     eg: sex('RCCMNL83S18D969H') -> 'M'
         sex('CNTCHR83T41D969D') -> 'F'
     """
-    
+
     assert isvalid(code)
 
     return int(code[9:11]) < 32 and 'M' or 'F'
+
+
+def generate_random_code():
+    def _genera():
+        partial = "{nom_cog}{anno_nasc}{mese_nasc}{gio_nasc_sesso}{comune}".format(
+            nom_cog=''.join([random.choice(string.uppercase) for i in range(6)]),
+            anno_nasc=''.join([random.choice("123456789") for i in range(2)]),
+            mese_nasc=''.join([random.choice("ABCDEHLMPRST") for i in range(1)]),
+            gio_nasc_sesso=''.join([random.choice("12") for i in range(2)]),
+            comune='A001'
+        )
+        return partial + control_code(partial)
+    return _genera()
