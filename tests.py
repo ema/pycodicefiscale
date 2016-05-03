@@ -7,12 +7,13 @@ import locale
 
 from codicefiscale import isvalid, get_birthday, get_sex, control_code, build, generate_random_code
 
+
 class TestRepos(unittest.TestCase):
 
     def test_isvalid(self):
-        invalid = [ None, True, 16, "RCCMNL",
-                    # the first 'I' shouldn't be there
-                    "CSTNGL22I10D086I" ]
+        invalid = [None, True, 16, "RCCMNL",
+                   # the first 'I' shouldn't be there
+                   "CSTNGL22I10D086I"]
 
         for cf in invalid:
             self.assertFalse(isvalid(cf))
@@ -86,25 +87,25 @@ class TestRepos(unittest.TestCase):
             'RCCMNL83S18D969H': (
                 "Rocca", "Emanuele",
                 datetime.datetime(1983, 11, 18),
-                'M','D969'
+                'M', 'D969'
             ),
 
             'CNTCHR83T41D969D': (
                 "Cintoi", "Chiara",
                 datetime.datetime(1983, 12, 1),
-                'F','D969'
+                'F', 'D969'
             ),
 
             'BNCSFN85T58G702W': (
                 "Bianucci", "Stefania",
                 datetime.datetime(1985, 12, 18),
-                'F','G702'
+                'F', 'G702'
             ),
 
             'RCDLSN84S16D969Z': (
                 "Arcidiacono", "Alessandro",
                 datetime.datetime(1984, 11, 16),
-                'M','D969'
+                'M', 'D969'
             ),
 
             'FOXDRA26C24H872Y': (
@@ -135,14 +136,14 @@ class TestRepos(unittest.TestCase):
                 "Fo'", "Mario",
                 # Short surname with apostrophe
                 datetime.datetime(1983, 11, 18),
-                'M','D969'
+                'M', 'D969'
             ),
 
             'YXXAXX83S18D969R': (
                 "Y", "A",
                 # Extremely short surname, and name (Korean example)
                 datetime.datetime(1983, 11, 18),
-                'M','D969'
+                'M', 'D969'
             ),
 
         }
@@ -169,7 +170,8 @@ class TestBugs(unittest.TestCase):
             return
 
         expected = "MRARSS91A25G693C"
-        actual = build("mario", "rossi", datetime.datetime(1991, 1, 25), "M", "G693")
+        actual = build(
+            "mario", "rossi", datetime.datetime(1991, 1, 25), "M", "G693")
         self.assertEquals(expected, actual)
 
     def test_02_no_first_name_bug(self):
