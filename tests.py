@@ -17,13 +17,17 @@ class TestRepos(unittest.TestCase):
         for cf in invalid:
             self.assertFalse(isvalid(cf))
 
-        valid = ( 'MRTNTN23M02D969P',
-                  'RCCMNL83S18D969H',
-                  'MRSMSR81D60Z611H',
-                  'CNTCHR83T41D969D',
-                  'XXXXXX77A01Z2P6V',
-                  'FOXDRA26C24H872Y',
-                  'MAILCU91A25F839D' )
+        valid = ('MRTNTN23M02D969P',
+                 'RCCMNL83S18D969H',
+                 'MRSMSR81D60Z611H',
+                 'CNTCHR83T41D969D',
+                 'FOXDRA26C24H872Y',
+                 'MAILCU91A25F839D',
+                 'RSSMRA45C12F205C',
+                 'RSSMRA45C12F20RX',
+                 'RSSMRA45C12F2L5N',
+                 'RSSMRA45C12F2LRI',
+                 'RSSMRAQRCMNFNLRG')
 
         for cf in valid:
             self.assertTrue(isvalid(cf), cf)
@@ -35,7 +39,12 @@ class TestRepos(unittest.TestCase):
             'MRSMSR81D60Z611H': '20-04-81',
             'CNTCHR83T41D969D': '01-12-83',
             'FOXDRA26C24H872Y': '24-03-26',
-            'MAILCU91A25F839D': '25-01-91'
+            'MAILCU91A25F839D': '25-01-91',
+            'RSSMRA45C12F205C': '12-03-45',
+            'RSSMRA45C12F20RX': '12-03-45',
+            'RSSMRA45C12F2L5N': '12-03-45',
+            'RSSMRA45C12F2LRI': '12-03-45',
+            'RSSMRAQRCMNFNLRG': '12-03-45'
         }
 
         for cf, expected in inputs.items():

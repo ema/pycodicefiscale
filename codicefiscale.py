@@ -37,7 +37,7 @@ __CONSONANTS = list(set(list(string.ascii_uppercase)).difference(__VOWELS))
 MONTHSCODE = ['A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T']
 
 # pylint: disable=C0301
-PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
+PATTERN = re.compile("^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$", re.IGNORECASE)  # noqa
 
 # Python 3 compatibility
 try:
@@ -55,6 +55,7 @@ def isvalid(code):
         isvalid('RCCMNL83S18D969') -> False
     """
     return (isinstance(code, basestring) and
+            len(code) == 16 and
             re.match(PATTERN, code) is not None and
             control_code(code[:-1]) == code[-1:])
 
@@ -200,12 +201,16 @@ def get_birthday(code):
     eg: birthday('RCCMNL83S18D969H') -> 18-11-83
     """
     assert isvalid(code)
+    day_year_charmap = {}
+    for idx, char in enumerate(string.digits):
+        day_year_charmap[char] = idx
+    for idx, char in enumerate('LMNPQRSTUV'):
+        day_year_charmap[char] = idx
 
-    day = int(code[9:11])
+    day = day_year_charmap[code[9]] * 10 + day_year_charmap[code[10]]
     day = day < 32 and day or day - 40
-
     month = MONTHSCODE.index(code[8]) + 1
-    year = int(code[6:8])
+    year = day_year_charmap[code[6]] * 10 + day_year_charmap[code[7]]
 
     return "%02d-%02d-%02d" % (day, month, year)
 
