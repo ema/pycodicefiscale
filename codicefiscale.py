@@ -29,14 +29,15 @@ __author__ = "Emanuele Rocca"
 import re
 # pylint: disable=W0402
 import string
+import random
 
-__VOWELS = [ 'A', 'E', 'I', 'O', 'U' ]
+__VOWELS = ['A', 'E', 'I', 'O', 'U']
 __CONSONANTS = list(set(list(string.ascii_uppercase)).difference(__VOWELS))
 
-MONTHSCODE = [ 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' ]
+MONTHSCODE = ['A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T']
 
 # pylint: disable=C0301
-PATTERN = "^[A-Z]{6}[0-9]{2}([A-E]|[HLMPRST])[0-9]{2}[A-Z][0-9]([A-Z]|[0-9])[0-9][A-Z]$"
+PATTERN = re.compile("^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$", re.IGNORECASE)  # noqa
 
 # Python 3 compatibility
 try:
@@ -53,9 +54,13 @@ def isvalid(code):
     eg: isvalid('RCCMNL83S18D969H') -> True
         isvalid('RCCMNL83S18D969') -> False
     """
-    return isinstance(code, basestring) and re.match(PATTERN, code) is not None
+    return (isinstance(code, basestring) and
+            len(code) == 16 and
+            re.match(PATTERN, code) is not None and
+            control_code(code[:-1]) == code[-1:])
 
-# Fiscal code calculation 
+
+# Fiscal code calculation
 def __common_triplet(input_string, consonants, vowels):
     """__common_triplet(input_string, consonants, vowels) -> string"""
     output = consonants
@@ -71,6 +76,7 @@ def __common_triplet(input_string, consonants, vowels):
 
     return output[:3]
 
+
 def __consonants_and_vowels(input_string):
     """__consonants_and_vowels(input_string) -> (string, list)
 
@@ -78,10 +84,11 @@ def __consonants_and_vowels(input_string):
     """
     input_string = input_string.upper().replace(' ', '')
 
-    consonants = [ char for char in input_string if char in __CONSONANTS ]
-    vowels     = [ char for char in input_string if char in __VOWELS ]
+    consonants = [char for char in input_string if char in __CONSONANTS]
+    vowels = [char for char in input_string if char in __VOWELS]
 
     return "".join(consonants), vowels
+
 
 def __surname_triplet(input_string):
     """__surname_triplet(input_string) -> string"""
@@ -89,20 +96,22 @@ def __surname_triplet(input_string):
 
     return __common_triplet(input_string, consonants, vowels)
 
+
 def __name_triplet(input_string):
     """__name_triplet(input_string) -> string"""
     if input_string == '':
         # highly unlikely: no first name, like for instance some Indian persons
         # with only one name on the passport
         # pylint: disable=W0511
-        return 'XXX' 
+        return 'XXX'
 
     consonants, vowels = __consonants_and_vowels(input_string)
-    
+
     if len(consonants) > 3:
         return "%s%s%s" % (consonants[0], consonants[2], consonants[3])
 
     return __common_triplet(input_string, consonants, vowels)
+
 
 def control_code(input_string):
     """``control_code(input_string) -> int``
@@ -123,8 +132,8 @@ def control_code(input_string):
     for idx, char in enumerate(string.ascii_uppercase):
         even_controlcode[char] = idx
 
-    values = [ 1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8,
-               12, 14, 16, 10, 22, 25, 24, 23 ]
+    values = [1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8,
+              12, 14, 16, 10, 22, 25, 24, 23]
 
     odd_controlcode = {}
 
@@ -141,15 +150,16 @@ def control_code(input_string):
             code += odd_controlcode[char]
         else:
             code += even_controlcode[char]
-    
+
     return string.ascii_uppercase[code % 26]
+
 
 def build(surname, name, birthday, sex, municipality):
     """``build(surname, name, birthday, sex, municipality) -> string``
 
     Computes the fiscal code for the given person data.
 
-    eg: build('Rocca', 'Emanuele', datetime.datetime(1983, 11, 18), 'M', 'D969') 
+    eg: build('Rocca', 'Emanuele', datetime.datetime(1983, 11, 18), 'M', 'D969')
         -> RCCMNL83S18D969H
     """
 
@@ -163,9 +173,10 @@ def build(surname, name, birthday, sex, municipality):
     output += MONTHSCODE[birthday.month - 1]
 
     # RCCMNL83S18
-    output += "%02d" % (sex.upper() == 'M' and birthday.day or 40 + birthday.day)
+    output += "%02d" % (sex.upper() ==
+                        'M' and birthday.day or 40 + birthday.day)
 
-    # RCCMNL83S18D969 
+    # RCCMNL83S18D969
     output += municipality
 
     # RCCMNL83S18D969H
@@ -175,11 +186,13 @@ def build(surname, name, birthday, sex, municipality):
 
     return output
 
-# info from fiscal code 
+# info from fiscal code
+
+
 def get_birthday(code):
     """``get_birthday(code) -> string``
 
-    Birthday of the person whose fiscal code is 'code', in the format DD-MM-YY. 
+    Birthday of the person whose fiscal code is 'code', in the format DD-MM-YY.
 
     Unfortunately it's not possible to guess the four digit birth year, given
     that the Italian fiscal code uses only the last two digits (1983 -> 83).
@@ -188,14 +201,19 @@ def get_birthday(code):
     eg: birthday('RCCMNL83S18D969H') -> 18-11-83
     """
     assert isvalid(code)
+    day_year_charmap = {}
+    for idx, char in enumerate(string.digits):
+        day_year_charmap[char] = idx
+    for idx, char in enumerate('LMNPQRSTUV'):
+        day_year_charmap[char] = idx
 
-    day = int(code[9:11])
+    day = day_year_charmap[code[9]] * 10 + day_year_charmap[code[10]]
     day = day < 32 and day or day - 40
-
     month = MONTHSCODE.index(code[8]) + 1
-    year = int(code[6:8])
+    year = day_year_charmap[code[6]] * 10 + day_year_charmap[code[7]]
 
     return "%02d-%02d-%02d" % (day, month, year)
+
 
 def get_sex(code):
     """``get_sex(code) -> string``
@@ -205,7 +223,22 @@ def get_sex(code):
     eg: sex('RCCMNL83S18D969H') -> 'M'
         sex('CNTCHR83T41D969D') -> 'F'
     """
-    
+
     assert isvalid(code)
 
     return int(code[9:11]) < 32 and 'M' or 'F'
+
+
+def generate_random_code():
+    def _genera():
+        partial = "{nom_cog}{anno_nasc}{mese_nasc}{gio_nasc_sesso}{comune}".format(
+            nom_cog=''.join([random.choice(string.ascii_uppercase)
+                             for i in range(6)]),
+            anno_nasc=''.join([random.choice("123456789") for i in range(2)]),
+            mese_nasc=''.join([random.choice("ABCDEHLMPRST")
+                               for i in range(1)]),
+            gio_nasc_sesso=''.join([random.choice("12") for i in range(2)]),
+            comune='A001'
+        )
+        return partial + control_code(partial)
+    return _genera()

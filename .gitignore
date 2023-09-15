@@ -1,0 +1,9 @@
+*~
+*.pyc
+*.pyo
+__pycache__
+virtual
+/build
+/dist
+/*.egg-info
+.python-version
